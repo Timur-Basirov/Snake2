@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +21,7 @@ namespace Snake
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("..... Snake Game .....");
+                Console.WriteLine(" Madu mäng");
                 Console.WriteLine("1. Play");
                 Console.WriteLine("2. LeaderBoard");
                 Console.WriteLine("3. Exit");
@@ -76,6 +76,7 @@ namespace Snake
                     break;
                 default:
                     Console.WriteLine("Wrong choise, default color will be (white).");
+                    Thread.Sleep(3000);
                     break;
             }
 
@@ -102,12 +103,14 @@ namespace Snake
             }
             else
             {
+                Console.Clear();
                 Console.WriteLine("Wrong choise, default map will be (default).");
+                Thread.Sleep(3000);
                 walls = new Walls(80, 25); 
             }
             Console.Clear();
 
-            //создаем игру с параметрами игрока
+            //параметры игрока
             Game playerGame = new Game(playerName, snakeColor, walls);
             int score = playerGame.Play();
 
@@ -120,10 +123,10 @@ namespace Snake
         static void ShowRecords()
         {
             Console.Clear();
-            Console.WriteLine("..... Leaderboard .....");
+            Console.WriteLine("Leaderboard");
             if (records.Count == 0)
             {
-                Console.WriteLine("There's no Leader stats.");
+                Console.WriteLine("Theres no Leader stats.");
             }
             else
             {
@@ -137,7 +140,6 @@ namespace Snake
             Console.ReadKey();
         }
 
-        //загрузка рекордов
         static void LoadRecords()
         {
             if (File.Exists(recordsFilePath))
@@ -154,7 +156,6 @@ namespace Snake
             }
         }
 
-        //сохрание рекордов
         static void SaveRecords()
         {
             var lines = records.Select(r => $"{r.Name},{r.Score}").ToList();
@@ -187,8 +188,8 @@ namespace Snake
             walls.Draw();
 
             //змейка
-            Point p = new Point(4, 5, '*');
-            Snake snake = new Snake(p, 4, Direction.RIGHT, snakeColor);
+            Point p = new Point(25, 12, '*');
+            Snake snake = new Snake(p, 2, Direction.RIGHT, snakeColor);
             snake.Draw();
 
             //еда
@@ -213,7 +214,7 @@ namespace Snake
                 {
                     snake.Move();
                 }
-
+                
                 //Счёт
                 Console.SetCursorPosition(30, 26);
                 Console.Write($"Score: {snake.Score}");
@@ -229,8 +230,11 @@ namespace Snake
 
             
             Console.Clear();
-            Console.WriteLine("You lost");
+            Thread.Sleep(1000);
+            Console.WriteLine($"You lost");
+            Thread.Sleep(1000);
             Console.WriteLine($"Your score was: {snake.Score}");
+            Thread.Sleep(1000);
             Console.WriteLine("Press any button, to return.");
             Console.ReadKey();
 
