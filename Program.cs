@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Unicode;
@@ -18,7 +20,7 @@ namespace Snake
 
         static void Main(string[] args)
         {
-            //загружаем рекорд
+            
             LoadRecords();
 
             while (true)
@@ -89,8 +91,6 @@ namespace Snake
             Console.WriteLine("2. Raske");
             Console.Write("Sisesta kaardi number:");
             string mapChoice = Console.ReadLine();
-
-
             //выбор карты
             Walls walls;
             if (mapChoice == "1")
@@ -112,9 +112,37 @@ namespace Snake
                 walls = new Walls(80, 25); 
             }
             Console.Clear();
+            Console.WriteLine("Vali toidu värv:");
+            Console.WriteLine("1. Valge");
+            Console.WriteLine("2. Kollane");
+            Console.WriteLine("3. Roheline");
+            Console.WriteLine("4. Punane");
+            Console.Write("Sisesta värvi number:");
+            string foodColorChoice = Console.ReadLine();
+            Console.Clear();
+            ConsoleColor foodColor = ConsoleColor.White; 
+            switch (foodColorChoice)
+            {
+                case "1":
+                    foodColor = ConsoleColor.White;
+                    break;
+                case "2":
+                    foodColor = ConsoleColor.Yellow;
+                    break;
+                case "3":
+                    foodColor = ConsoleColor.Green;
+                    break;
+                case "4":
+                    foodColor = ConsoleColor.Red;
+                    break;
+                default:
+                    Console.WriteLine("Vale valik, vaikimisi värv on (valge).");
+                    Thread.Sleep(2000);
+                    break;
+            }
 
             //параметры игрока
-            Game playerGame = new Game(playerName, snakeColor, walls);
+            Game playerGame = new Game(playerName, snakeColor, walls, foodColor);
             int score = playerGame.Play();
 
             //добавляем данные в records.txt
@@ -177,12 +205,14 @@ namespace Snake
         string playerName;
         ConsoleColor snakeColor;
         Walls walls;
+        private ConsoleColor foodColor;
 
-        public Game(string name, ConsoleColor color, Walls wall)
+        public Game(string name, ConsoleColor snakeColor, Walls walls, ConsoleColor foodColor)
         {
             playerName = name;
-            snakeColor = color;
-            walls = wall;
+            this.snakeColor = snakeColor;
+            this.walls = walls;
+            this.foodColor = foodColor; 
         }
 
         public int Play()
@@ -198,27 +228,53 @@ namespace Snake
             //еда
             FoodCreator foodCreator = new FoodCreator(80, 25, '$', this.walls);
             Point food = foodCreator.CreateFood();
+            Console.ForegroundColor = foodColor; 
             food.Draw();
+            Console.ResetColor();
 
-            //игровой процесс
+            
             while (true)
             {
                 if (walls.IsHit(snake) || snake.IsHitTail())
                 {
-                    break;
+                    
+                    string gifPath = "Kaotus.gif"; 
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo(gifPath) { UseShellExecute = true });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Не удалось открыть GIF: " + ex.Message);
+                    }
+
+                    try
+                    {
+                        SoundPlayer player = new SoundPlayer("Kaotus.wav"); 
+                        player.PlaySync(); 
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ошибка при воспроизведении звука: " + ex.Message);
+                    }
+
+
+                    break; 
                 }
 
                 if (snake.Eat(food))
                 {
                     food = foodCreator.CreateFood();
+                    Console.ForegroundColor = foodColor;
                     food.Draw();
+                    Console.ResetColor();
                 }
                 else
                 {
                     snake.Move();
                 }
                 
-                //Счёт
+                
                 Console.SetCursorPosition(30, 26);
                 Console.Write($"Score: {snake.Score}");
 
