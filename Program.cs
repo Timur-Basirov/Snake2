@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Unicode;
+using System.Threading;
 
 namespace Snake
 {
@@ -12,6 +14,7 @@ namespace Snake
         static List<PlayerRecord> records = new List<PlayerRecord>();
         static string recordsFilePath = "records.txt";
         static ComplexWalls? cw;
+        
 
         static void Main(string[] args)
         {
@@ -21,11 +24,11 @@ namespace Snake
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine(" Madu mäng");
-                Console.WriteLine("1. Play");
-                Console.WriteLine("2. LeaderBoard");
-                Console.WriteLine("3. Exit");
-                Console.Write("Choose option: ");
+                Console.WriteLine("  __  __           _         __  __ _   _             \r\n |  \\/  |         | |       |  \\/  (_) (_)            \r\n | \\  / | __ _  __| |_   _  | \\  / | __ _ _ __   __ _ \r\n | |\\/| |/ _` |/ _` | | | | | |\\/| |/ _` | '_ \\ / _` |\r\n | |  | | (_| | (_| | |_| | | |  | | (_| | | | | (_| |\r\n |_|  |_|\\__,_|\\__,_|\\__,_| |_|  |_|\\__,_|_| |_|\\__, |\r\n                                                 __/ |\r\n                                                |___/ ");
+                Console.WriteLine("1. Mängi");
+                Console.WriteLine("2. Liidrite tabel");
+                Console.WriteLine("3. Välja");
+                Console.Write("Valige valik:");
                 string choice = Console.ReadLine();
 
                 if (choice == "1")
@@ -46,16 +49,16 @@ namespace Snake
         static void StartGame()
         {
             Console.Clear();
-            Console.Write("Insert your name: ");
+            Console.Write("Sisesta sinu nimi:");
             string playerName = Console.ReadLine();
 
             Console.Clear();
-            Console.WriteLine("Choose snake color:");
-            Console.WriteLine("1. White");
-            Console.WriteLine("2. Yellow");
-            Console.WriteLine("3. Green");
-            Console.WriteLine("4. Red");
-            Console.Write("Insert color number: ");
+            Console.WriteLine("Vali madu värv:");
+            Console.WriteLine("1. Valge");
+            Console.WriteLine("2. Kollane");
+            Console.WriteLine("3. Roheline");
+            Console.WriteLine("4. Punane");
+            Console.Write("Sisesta värvi number:");
             string colorChoice = Console.ReadLine();
             Console.Clear();
 
@@ -75,16 +78,16 @@ namespace Snake
                     snakeColor = ConsoleColor.Red;
                     break;
                 default:
-                    Console.WriteLine("Wrong choise, default color will be (white).");
+                    Console.WriteLine("Vale valik, vaikimisi värv on (valge).");
                     Thread.Sleep(3000);
                     break;
             }
 
             Console.Clear();
-            Console.WriteLine("Choose map to play:");
-            Console.WriteLine("1. Default");
-            Console.WriteLine("2. Hard");
-            Console.Write("Insert map number: ");
+            Console.WriteLine("Vali kaart, mida mängida:");
+            Console.WriteLine("1. Lihtne");
+            Console.WriteLine("2. Raske");
+            Console.Write("Sisesta kaardi number:");
             string mapChoice = Console.ReadLine();
 
 
@@ -104,7 +107,7 @@ namespace Snake
             else
             {
                 Console.Clear();
-                Console.WriteLine("Wrong choise, default map will be (default).");
+                Console.WriteLine("Vale valik, vaikimisi kaart on (Lihtne).");
                 Thread.Sleep(3000);
                 walls = new Walls(80, 25); 
             }
@@ -123,10 +126,10 @@ namespace Snake
         static void ShowRecords()
         {
             Console.Clear();
-            Console.WriteLine("Leaderboard");
+            Console.WriteLine("Edetabel");
             if (records.Count == 0)
             {
-                Console.WriteLine("Theres no Leader stats.");
+                Console.WriteLine("Ei ole olemas liidri statistikat.");
             }
             else
             {
@@ -136,7 +139,7 @@ namespace Snake
                     Console.WriteLine($"{record.Name}: {record.Score}");
                 }
             }
-            Console.WriteLine("Press any button to return.");
+            Console.WriteLine("Vajuta mis tahes nuppu, et tagasi minna.");
             Console.ReadKey();
         }
 
@@ -189,7 +192,7 @@ namespace Snake
 
             //змейка
             Point p = new Point(25, 12, '*');
-            Snake snake = new Snake(p, 2, Direction.RIGHT, snakeColor);
+            Snake snake = new Snake(p, 3, Direction.RIGHT, snakeColor);
             snake.Draw();
 
             //еда
@@ -231,11 +234,11 @@ namespace Snake
             
             Console.Clear();
             Thread.Sleep(1000);
-            Console.WriteLine($"You lost");
+            Console.WriteLine($"Sa kaotasid");
             Thread.Sleep(1000);
-            Console.WriteLine($"Your score was: {snake.Score}");
+            Console.WriteLine($"Teie tulemus oli: {snake.Score}");
             Thread.Sleep(1000);
-            Console.WriteLine("Press any button, to return.");
+            Console.WriteLine("Vajuta mis tahes nuppu, et tagasi minna.");
             Console.ReadKey();
 
             return snake.Score;
