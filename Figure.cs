@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snake
+namespace UusimangTARpv24
 {
     class Figure
     {
-        protected List<Point> pList;
-        public Figure(int x , int y)
+        protected List<Point> pList = new List<Point>();
+        public Figure(int x, int y)
         {
             pList = new List<Point>()
             {
