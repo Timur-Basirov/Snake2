@@ -1,26 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Media;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.Unicode;
 using System.Threading;
 
-namespace Snake
+namespace UusimangTARpv24
 {
     class Program
     {
         static List<PlayerRecord> records = new List<PlayerRecord>();
         static string recordsFilePath = "records.txt";
         static ComplexWalls? cw;
-        
 
         static void Main(string[] args)
         {
-            
             LoadRecords();
 
             while (true)
@@ -31,7 +24,7 @@ namespace Snake
                 Console.WriteLine("2. Liidrite tabel");
                 Console.WriteLine("3. Välja");
                 Console.Write("Valige valik:");
-                string choice = Console.ReadLine();
+                string choice = Console.ReadLine() ?? "";
 
                 if (choice == "1")
                 {
@@ -52,7 +45,7 @@ namespace Snake
         {
             Console.Clear();
             Console.Write("Sisesta sinu nimi:");
-            string playerName = Console.ReadLine();
+            string playerName = Console.ReadLine() ?? "Player";
 
             Console.Clear();
             Console.WriteLine("Vali madu värv:");
@@ -61,7 +54,7 @@ namespace Snake
             Console.WriteLine("3. Roheline");
             Console.WriteLine("4. Punane");
             Console.Write("Sisesta värvi number:");
-            string colorChoice = Console.ReadLine();
+            string colorChoice = Console.ReadLine() ?? "1";
             Console.Clear();
 
             ConsoleColor snakeColor = ConsoleColor.White;
@@ -90,7 +83,7 @@ namespace Snake
             Console.WriteLine("1. Lihtne");
             Console.WriteLine("2. Raske");
             Console.Write("Sisesta kaardi number:");
-            string mapChoice = Console.ReadLine();
+            string mapChoice = Console.ReadLine() ?? "1";
             //выбор карты
             Walls walls;
             if (mapChoice == "1")
@@ -109,7 +102,7 @@ namespace Snake
                 Console.Clear();
                 Console.WriteLine("Vale valik, vaikimisi kaart on (Lihtne).");
                 Thread.Sleep(3000);
-                walls = new Walls(80, 25); 
+                walls = new Walls(80, 25);
             }
             Console.Clear();
             Console.WriteLine("Vali toidu värv:");
@@ -118,9 +111,9 @@ namespace Snake
             Console.WriteLine("3. Roheline");
             Console.WriteLine("4. Punane");
             Console.Write("Sisesta värvi number:");
-            string foodColorChoice = Console.ReadLine();
+            string foodColorChoice = Console.ReadLine() ?? "1";
             Console.Clear();
-            ConsoleColor foodColor = ConsoleColor.White; 
+            ConsoleColor foodColor = ConsoleColor.White;
             switch (foodColorChoice)
             {
                 case "1":
@@ -145,7 +138,7 @@ namespace Snake
             Game playerGame = new Game(playerName, snakeColor, walls, foodColor);
             int score = playerGame.Play();
 
-            //добавляем данные в records.txt
+            //add данные в records.txt
             records.Add(new PlayerRecord { Name = playerName, Score = score });
 
             SaveRecords();
@@ -192,113 +185,5 @@ namespace Snake
             var lines = records.Select(r => $"{r.Name},{r.Score}").ToList();
             File.WriteAllLines(recordsFilePath, lines);
         }
-    }
-
-    class PlayerRecord
-    {
-        public string Name { get; set; }
-        public int Score { get; set; }
-    }
-
-    class Game
-    {
-        string playerName;
-        ConsoleColor snakeColor;
-        Walls walls;
-        private ConsoleColor foodColor;
-
-        public Game(string name, ConsoleColor snakeColor, Walls walls, ConsoleColor foodColor)
-        {
-            playerName = name;
-            this.snakeColor = snakeColor;
-            this.walls = walls;
-            this.foodColor = foodColor; 
-        }
-
-        public int Play()
-        {
-            //карта
-            walls.Draw();
-
-            //змейка
-            Point p = new Point(25, 12, '*');
-            Snake snake = new Snake(p, 3, Direction.RIGHT, snakeColor);
-            snake.Draw();
-
-            //еда
-            FoodCreator foodCreator = new FoodCreator(80, 25, '$', this.walls);
-            Point food = foodCreator.CreateFood();
-            Console.ForegroundColor = foodColor; 
-            food.Draw();
-            Console.ResetColor();
-
-            
-            while (true)
-            {
-                if (walls.IsHit(snake) || snake.IsHitTail())
-                {
-                    
-                    string gifPath = "Kaotus.gif"; 
-                    try
-                    {
-                        Process.Start(new ProcessStartInfo(gifPath) { UseShellExecute = true });
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Не удалось открыть GIF: " + ex.Message);
-                    }
-
-                    try
-                    {
-                        SoundPlayer player = new SoundPlayer("Kaotus.wav"); 
-                        player.PlaySync(); 
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Ошибка при воспроизведении звука: " + ex.Message);
-                    }
-
-
-                    break; 
-                }
-
-                if (snake.Eat(food))
-                {
-                    food = foodCreator.CreateFood();
-                    Console.ForegroundColor = foodColor;
-                    food.Draw();
-                    Console.ResetColor();
-                }
-                else
-                {
-                    snake.Move();
-                }
-                
-                
-                Console.SetCursorPosition(30, 26);
-                Console.Write($"Score: {snake.Score}");
-
-                Thread.Sleep(100);
-
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo key = Console.ReadKey();
-                    snake.HandleKey(key.Key);
-                }
-            }
-
-            
-            Console.Clear();
-            Thread.Sleep(1000);
-            Console.WriteLine($"Sa kaotasid");
-            Thread.Sleep(1000);
-            Console.WriteLine($"Teie tulemus oli: {snake.Score}");
-            Thread.Sleep(1000);
-            Console.WriteLine("Vajuta mis tahes nuppu, et tagasi minna.");
-            Console.ReadKey();
-
-            return snake.Score;
-        }
-
     }
 }
