@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UusimangTARpv24
 {
-    class PlayerRecord
+    public class PlayerRecord
     {
         public string Name { get; set; } = string.Empty;
         public int Score { get; set; }

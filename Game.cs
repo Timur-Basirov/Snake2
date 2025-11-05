@@ -54,7 +54,7 @@ namespace UusimangTARpv24
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Не удалось открыть GIF: " + ex.Message);
+                        Console.WriteLine(ex.Message);
                     }
                     break;
                 }
@@ -93,6 +93,7 @@ namespace UusimangTARpv24
             Thread.Sleep(1000);
             Console.WriteLine("Vajuta mis tahes nuppu, et tagasi minna.");
             Console.ReadKey();
+
 
             return snake.Score;
         }

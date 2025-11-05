@@ -10,7 +10,7 @@ namespace UusimangTARpv24
         {
             wallList = new List<Figure>();
 
-            //Рамочка
+            //рамочка
             HorizontalLine upLine = new HorizontalLine(0, mapWidth - 2, 0, '█');
             HorizontalLine downLine = new HorizontalLine(0, mapWidth - 2, mapHeight - 1, '█');
             VerticalLine leftLine = new VerticalLine(0, mapHeight - 1, 0, '█');
