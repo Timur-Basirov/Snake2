@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snake
+namespace UusimangTARpv24
 {
     class Snake : Figure
     {
@@ -23,7 +23,7 @@ namespace Snake
                 p.Move(i, direction);
                 pList.Add(p);
             }
-            Score = 0; 
+            Score = 0;
         }
 
         public void Move()
@@ -34,7 +34,7 @@ namespace Snake
             pList.Add(head);
 
             tail.Clear();
-            Console.ForegroundColor = color; 
+            Console.ForegroundColor = color;
             head.Draw();
             Console.ResetColor();
         }
