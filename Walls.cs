@@ -1,43 +1,45 @@
-using Snake;
 using System.Collections.Generic;
 
-class Walls
+namespace UusimangTARpv24
 {
-    protected List<Figure> wallList;
-
-    public Walls(int mapWidth, int mapHeight)
+    class Walls
     {
-        wallList = new List<Figure>();
+        protected List<Figure> wallList;
 
-        //Рамочка
-        HorizontalLine upLine = new HorizontalLine(0, mapWidth - 2, 0, '█');
-        HorizontalLine downLine = new HorizontalLine(0, mapWidth - 2, mapHeight - 1, '█');
-        VerticalLine leftLine = new VerticalLine(0, mapHeight - 1, 0, '█');
-        VerticalLine rightLine = new VerticalLine(0, mapHeight - 1, mapWidth - 2, '█');
-
-        wallList.Add(upLine);
-        wallList.Add(downLine);
-        wallList.Add(leftLine);
-        wallList.Add(rightLine);
-    }
-
-    public virtual bool IsHit(Figure figure)
-    {
-        foreach (var wall in wallList)
+        public Walls(int mapWidth, int mapHeight)
         {
-            if (wall.IsHit(figure))
-            {
-                return true;
-            }
+            wallList = new List<Figure>();
+
+            //Рамочка
+            HorizontalLine upLine = new HorizontalLine(0, mapWidth - 2, 0, '█');
+            HorizontalLine downLine = new HorizontalLine(0, mapWidth - 2, mapHeight - 1, '█');
+            VerticalLine leftLine = new VerticalLine(0, mapHeight - 1, 0, '█');
+            VerticalLine rightLine = new VerticalLine(0, mapHeight - 1, mapWidth - 2, '█');
+
+            wallList.Add(upLine);
+            wallList.Add(downLine);
+            wallList.Add(leftLine);
+            wallList.Add(rightLine);
         }
-        return false;
-    }
 
-    public void Draw()
-    {
-        foreach (var wall in wallList)
+        public virtual bool IsHit(Figure figure)
         {
-            wall.Draw();
+            foreach (var wall in wallList)
+            {
+                if (wall.IsHit(figure))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void Draw()
+        {
+            foreach (var wall in wallList)
+            {
+                wall.Draw();
+            }
         }
     }
 }
